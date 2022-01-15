@@ -1,11 +1,13 @@
-'''
+"""
 Methods to generate Dirac approximations to probability distributions
-'''
+"""
 import numpy as np
+
 
 def inverse_transform_sampling(invcdf, N):
     X = np.linspace(0, 1, N, endpoint=True)
     return invcdf(X)
+
 
 def random_sampling(pdf, bound, N):
     np.random.seed(1)

@@ -1,4 +1,4 @@
-'''
+"""
 smolyak includes the following modules and packages:
 
 * smolyak.py: General, adaptive and non-adaptive, implementations of Smolyak's algorithm
@@ -18,6 +18,6 @@ smolyak includes the following modules and packages:
     * Solution of partial differential equations
     * Polynomial approximation
     
-'''
+"""
 from smolyak.smolyak import SparseApproximator
 from smolyak import indices

@@ -1,15 +1,17 @@
 from dolfin import *  # @UnusedWildImport
 import logging
 import numpy as np
-logging.getLogger('FFC').setLevel(5)
+
+logging.getLogger("FFC").setLevel(5)
 logging.basicConfig(level=logging.DEBUG)
-logging.getLogger('UFL').setLevel(5)
+logging.getLogger("UFL").setLevel(5)
 set_log_level(50)
+
 
 def kl1D(y, N, exponent, order=1):
     deg = order
     mesh = UnitIntervalMesh(int(N))
-    V = FunctionSpace(mesh, 'CG', deg)
+    V = FunctionSpace(mesh, "CG", deg)
     bc = DirichletBC(V, Constant(0.0), lambda x, on_boundary: on_boundary)
     output = np.zeros((y.shape[0], 1))
     ut = TrialFunction(V)
@@ -19,8 +21,8 @@ def kl1D(y, N, exponent, order=1):
     d = y.shape[1]
     expression_string = diffusion_coefficient(d, exponent)
     for j in range(y.shape[0]):
-        arg_dict = { 'y%d' % (i + 1): v for i, v in enumerate(y[j, :])}
-        arg_dict['degree'] = 2 * deg
+        arg_dict = {"y%d" % (i + 1): v for i, v in enumerate(y[j, :])}
+        arg_dict["degree"] = 2 * deg
         D = Expression(expression_string, **arg_dict)
         a = dot(D * grad(ut), grad(v)) * dx
         u = Function(V)
@@ -38,15 +40,16 @@ def kl1D(y, N, exponent, order=1):
         output[j] = a
     return output
 
+
 def diffusion_coefficient(d, exponent):
-    expression = 'exp( 0 '
+    expression = "exp( 0 "
     for dd in range(d):
         dd = dd + 1
-        expression += '+'
-        expression += 'pow({},-{})*y{}*'.format(dd, exponent, dd)
+        expression += "+"
+        expression += "pow({},-{})*y{}*".format(dd, exponent, dd)
         if dd % 2 == 0:
-            expression += 'sin({}*pi*x[0])'.format(dd)
+            expression += "sin({}*pi*x[0])".format(dd)
         else:
-            expression += 'cos({}*pi*x[0])'.format(dd)
-    expression += ')'
+            expression += "cos({}*pi*x[0])".format(dd)
+    expression += ")"
     return expression
